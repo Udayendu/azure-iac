@@ -1,0 +1,27 @@
+---
+- name: Create Azure Virtual Network & Subnet
+  hosts: localhost
+  connection: local
+  vars_files:
+    - azure-vars.yaml        
+
+  tasks:
+  - name: Creating "{{ az_vn }}" virtual network
+    azure_rm_virtualnetwork:
+      resource_group: "{{ resource_group }}"
+      name: "{{ az_vn }}"
+      state: present
+      address_prefixes_cidr:
+          - "{{ address_prefixes_cidr }}"
+      tags:
+          testing: devops-vn
+          delete: never
+
+
+  - name: Creating "{{ az_vn_subnet }}" virtual private subnet          
+    azure_rm_subnet:
+      resource_group: "{{ resource_group }}"
+      name: "{{ az_vn_subnet }}"
+      virtual_network_name: "{{ az_vn }}"
+      state: present
+      address_prefix_cidr: "{{ address_prefix_cidr }}"      

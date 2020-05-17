@@ -1,0 +1,24 @@
+---
+- name: Delete Azure Resources
+  hosts: localhost
+  connection: local
+  vars_files:
+    - azure-vars.yaml           
+
+  tasks:
+  - name: Deleting "{{ resource_group }}" resource group
+    azure_rm_resourcegroup:
+      name: "{{ resource_group }}"
+      location: eastus
+      force_delete_nonempty: yes
+      state: absent
+      tags:
+          testing: devops-rg
+          delete: never
+
+  - name: Deleting "{{ nw_watch_resource_group }}" resource group          
+    azure_rm_resourcegroup:
+      name: "{{ nw_watch_resource_group }}"
+      location: eastus
+      force_delete_nonempty: yes
+      state: absent

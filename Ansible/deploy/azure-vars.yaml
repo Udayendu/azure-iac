@@ -1,0 +1,16 @@
+# Variable details for ansible playbooks
+resource_group: 'devops-lab-rg-01'
+az_vn: 'devops-lab-virtual-network-01'
+az_vn_subnet: 'devops-lab-private-subnet-01'
+address_prefixes_cidr: '172.100.0.0/16'
+address_prefix_cidr: '172.100.0.0/24'
+
+
+# VM Details
+web_server: 'Web-Server-01'
+db_server: 'DB-Server-01'
+web_sg: 'web-security-group'
+db_sg: 'db-security-group'
+admin_uname: 'centos'
+admin_passwd: 'Avaya123$'
+vm_size: 'Standard_B1ms'

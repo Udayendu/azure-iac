@@ -1,0 +1,16 @@
+---
+- name: Create Azure Resources
+  hosts: localhost
+  connection: local
+  vars_files:
+    - azure-vars.yaml           
+
+  tasks:
+  - name: Creating "{{ resource_group }}" resource group
+    azure_rm_resourcegroup:
+      name: "{{ resource_group }}"
+      location: eastus
+      state: present
+      tags:
+          testing: devops-rg
+          delete: never

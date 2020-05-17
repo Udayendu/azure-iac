@@ -1,0 +1,74 @@
+---
+- name: Delete a Web Stack having one Web Server & DB Server
+  hosts: localhost
+  connection: local
+  vars_files:
+    - azure-vars.yaml          
+
+  tasks:
+  - name: Delete "{{ web_server }}" virtual machine
+    azure_rm_virtualmachine:
+      resource_group: "{{ resource_group }}"
+      name: "{{ web_server }}"
+      vm_size: Standard_B1ms
+      os_type: Linux
+      short_hostname: "{{ web_server }}"
+      state: absent
+      network_interfaces: webnic
+
+
+  - name: Delete "{{ db_server }}" virtual machine
+    azure_rm_virtualmachine:
+      resource_group: "{{ resource_group }}"
+      name: "{{ db_server }}"
+      vm_size: Standard_B1ms
+      os_type: Linux
+      short_hostname: "{{ db_server }}"
+      state: absent
+      network_interfaces: dbnic
+
+  - name: Delete a virtual network interface card for "{{ web_server }}"
+    azure_rm_networkinterface:
+      resource_group: "{{ resource_group }}"
+      name: webnic
+      state: absent
+      virtual_network: "{{ az_vn }}"
+      subnet: "{{ az_vn_subnet }}"
+      security_group: "{{ web_sg }}"    
+      ip_configurations:
+        - name: ipconfig01
+          public_ip_address_name: websrv-public-ip
+          primary: True          
+                    
+  - name: Delete a virtual network interface card for "{{ db_server }}"
+    azure_rm_networkinterface:
+      resource_group: "{{ resource_group }}"
+      name: dbnic
+      state: absent
+      virtual_network: "{{ az_vn }}"
+      subnet: "{{ az_vn_subnet }}"
+      security_group: "{{ db_sg }}"    
+      ip_configurations:
+        - name: ipconfig01
+          primary: True          
+
+  - name: Delete a public IP for "{{ web_server }}"
+    azure_rm_publicipaddress:
+      resource_group: "{{ resource_group }}"
+      allocation_method: Static
+      state: absent
+      name: websrv-public-ip
+
+  - name: Deleting "{{ web_sg }}" NSG for Web Server
+    azure_rm_securitygroup:
+      resource_group:  "{{ resource_group }}"
+      name: "{{ web_sg }}"
+      purge_rules: yes
+      state: absent
+
+  - name: Deleting "{{ db_sg }}" NSG for DB Server
+    azure_rm_securitygroup:
+      resource_group:  "{{ resource_group }}"
+      name: "{{ db_sg }}"
+      purge_rules: yes
+      state: absent

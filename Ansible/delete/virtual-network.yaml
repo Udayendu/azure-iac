@@ -1,0 +1,29 @@
+---
+- name: Delete Azure Virtual Network & Subnet
+  hosts: localhost
+  connection: local
+  vars_files:
+    - azure-vars.yaml        
+
+  tasks:
+  - name: Deleting "{{ az_vn_subnet }}" virtual private subnet          
+    azure_rm_subnet:
+      resource_group: "{{ resource_group }}"
+      name: "{{ az_vn_subnet }}"
+      virtual_network_name: "{{ az_vn }}"
+      state: absent
+      address_prefix_cidr: "{{ address_prefix_cidr }}"      
+
+  # This can be used to delete the  VN and VN Subnet both      
+  - name: Deleting "{{ az_vn }}" virtual network
+    azure_rm_virtualnetwork:
+      resource_group: "{{ resource_group }}"
+      name: "{{ az_vn }}"
+      state: absent
+      address_prefixes_cidr:
+          - "{{ address_prefixes_cidr }}"
+      tags:
+          testing: devops-vn
+          delete: never
+
+
