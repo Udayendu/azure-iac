@@ -28,3 +28,15 @@
     secret='<security-principal-password>'
     tenant='<security-principal-tenant>'  
     ```
+
+    d. To deploy the azure resource use the playbooks available under 'Ansible/deploy' folder. Eg:
+    ```
+    $ ansible-playbook  Ansible/deploy/resource-group.yaml
+    $ ansible-playbook  Ansible/deploy/virtual-network.yaml
+    $ ansible-playbook  Ansible/deploy/vm-deploy.yaml
+    ```
+    
+    e. To delete the fullstack solution use the below playbook:
+    ```
+    $ ansible-playbook  Ansible/delete/vm-delete.yaml
+    ```
